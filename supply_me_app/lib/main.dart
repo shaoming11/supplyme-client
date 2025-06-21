@@ -4,7 +4,7 @@ void main() {
   runApp(const MyApp());
 }
 
-ThemeData lightTheme = ThemeData(
+/*ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: Colors.blue,
   scaffoldBackgroundColor: Colors.white,
@@ -15,7 +15,7 @@ ThemeData lightTheme = ThemeData(
   textTheme: TextTheme(
     bodyMedium: TextStyle(color: Colors.black),
   ),
-);
+);*/
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
   primaryColor: const Color.fromARGB(255, 101, 24, 153),
@@ -29,7 +29,7 @@ ThemeData darkTheme = ThemeData(
   ),
 );
 
-class MyApp extends StatelessWidget {
+/*class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
@@ -59,10 +59,10 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
-}
+}*/
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -73,21 +73,16 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
-
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyAppState extends State<MyApp> {
 
-  bool isDarkMode = false;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      theme: darkTheme,
       home: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false, 
@@ -104,30 +99,22 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
        
         body: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,  
-            children: [
-              /*SizedBox(
-                width: 100,
-                height: 100,
-                child: Image.asset('assets/logo.png'),
-              ),*/
-              Column(
-                
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Dark Mode'),
-                  Switch(
-                    value: isDarkMode,
-                    onChanged: (value) {
-                      setState(() {
-                        isDarkMode = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
+          child: Container(
+            color: Colors.red,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,  
+              children: [
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: 320.0,
+                  height: 320.0,
+                ),
+                Column(
+                  
+
+                ),
+              ],
+            ),
           ),
         ),
       ),
