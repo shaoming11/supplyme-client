@@ -67,49 +67,74 @@ class _MyAppState extends State<MyApp> {
           child: Container(
             padding: EdgeInsets.all(0),
             child: Column(
-              spacing: 15,
               mainAxisSize: MainAxisSize.min,  
               children: [
                 SizedBox(
-                  width: double.infinity,
-                  height: 150,
+                  // width: double.infinity,
+                  // height: 150,
+                  width: 46,
+                  height: double.infinity,
                   child: Image.asset(
                     'assets/images/logo.png',
                     fit: BoxFit.contain,
                   ),
                 ),
                 Column(
-                  spacing: 110,
                   children: [
-                    Text(
-                      "What do you want to look for?",
-                      style: TextStyle(fontSize: 45)
+                    Padding(
+                      padding:  EdgeInsets.only(top: 30, bottom: 40),
+                      child: Text(
+                        "What do you want to look for?",
+                        style: TextStyle(fontSize: 40)
+                      ),
                     ),
-                    SearchAnchor(
-                      searchController: _searchController, 
-                      builder: (BuildContext context, SearchController controller) {
-                        return SearchBar(
-                          controller: controller,
-                          hintText: 'Search for a company',
-                          onSubmitted: (value) => _handleSearch(context, value),
-                          onTap: controller.openView,
-                          onChanged: (_) => controller.openView(),
-                          leading: const Icon(Icons.search),
-                        );
-                      },
-                      suggestionsBuilder: (BuildContext context, SearchController controller) {
-                        return List<ListTile>.generate(8, (int index) {
-                          final String item = 'item $index';
-                          return ListTile (
-                            title: Text(item),
-                            onTap: () {
-                              setState(() {
-                                controller.closeView(item);
-                              });
-                            },
-                          );
-                        });
-                      },
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 40),
+                      child: FractionallySizedBox(
+                        widthFactor: 0.5,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12)
+                              )
+                            ),
+                            fillColor: Colors.amber,
+                            prefixIcon: Icon(Icons.search),
+                            prefixIconColor: Color.fromRGBO(0, 0, 0, 1)
+                          ),
+                          style: TextStyle(
+                            color: Colors.green,
+                          ),
+                          // searchController: _searchController, 
+                          // builder: (BuildContext context, SearchController controller) {
+                          //   return SearchBar(
+                          //     controller: controller,
+                          //     hintText: 'Search for a company',
+                          //     onSubmitted: (value) => _handleSearch(context, value),
+                          //     onTap: controller.openView,
+                          //     onChanged: (_) => controller.openView(),
+                          //     leading: const Icon(Icons.search),
+                          //   );
+                          // },
+                          // suggestionsBuilder: (BuildContext context, SearchController controller) {
+                          //   return List<ListTile>.generate(8, (int index) {
+                          //     final String item = 'item $index';
+                          //     return ListTile (
+                          //       title: Text(item),
+                          //       onTap: () {
+                          //         setState(() {
+                          //           controller.closeView(item);
+                          //         });
+                          //       },
+                          //     );
+                          //   });
+                          // },
+                        ),
+                      ),
                     ),
                     Builder(
                       builder: (context) {
@@ -118,8 +143,13 @@ class _MyAppState extends State<MyApp> {
                             _handleSearch(context, _searchController.text);
                           },
                           style: TextButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 141, 30, 192),
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            backgroundColor: const Color.fromARGB(255, 166, 99, 204),
+                            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.all(
+                                Radius.circular(12)
+                              )
+                            )                            
                           ),
                           child: const Text(
                             "Search",
