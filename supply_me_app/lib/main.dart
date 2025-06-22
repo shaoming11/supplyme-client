@@ -18,7 +18,7 @@ void main() {
 );*/
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
-  primaryColor: const Color.fromARGB(255, 101, 24, 153),
+  primaryColor: const Color.fromARGB(1, 13,17,22),
   scaffoldBackgroundColor: Colors.black,
   appBarTheme: AppBarTheme(
     backgroundColor: const Color.fromARGB(255, 101, 24, 153),
@@ -29,53 +29,14 @@ ThemeData darkTheme = ThemeData(
   ),
 );
 
-/*class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}*/
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
+
 
 class _MyAppState extends State<MyApp> {
 
@@ -90,9 +51,9 @@ class _MyAppState extends State<MyApp> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextButton(onPressed: () {}, child: const Text("Features")),
-                TextButton(onPressed: () {}, child: const Text("Pricing")),
-                TextButton(onPressed: () {}, child: const Text("Support")),
+                TextButton(onPressed: () {}, child: const Text("Features", style: TextStyle(fontSize: 20.0))),
+                TextButton(onPressed: () {}, child: const Text("Pricing", style: TextStyle(fontSize: 20.0))),
+                TextButton(onPressed: () {}, child: const Text("Support", style: TextStyle(fontSize: 20.0))),
               ],
             ),
           ),
@@ -100,18 +61,64 @@ class _MyAppState extends State<MyApp> {
        
         body: Center(
           child: Container(
-            color: Colors.red,
+            padding: EdgeInsets.all(0),
             child: Column(
-              mainAxisSize: MainAxisSize.min,  
+              mainAxisSize: MainAxisSize.min,
+              spacing: 10,  
               children: [
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: 320.0,
-                  height: 320.0,
+                SizedBox(
+                  width: double.infinity,
+                  height: 100,
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 Column(
-                  
-
+                  spacing: 90,
+                  children: [
+                    Text(
+                      "What do you want to look for?",
+                      style: TextStyle(fontSize: 30)
+                    ),
+                    SearchAnchor(
+                      builder: (BuildContext context, SearchController controller) {
+                        return SearchBar(
+                          controller: controller,
+                          hintText: 'Search for a company',
+                          onTap: () {
+                            controller.openView();
+                          },
+                          onChanged: (_) {
+                            controller.openView();
+                          },
+                          leading: const Icon(Icons.search),
+                        );
+                      },
+                      suggestionsBuilder: (BuildContext context, SearchController controller) {
+                        return List<ListTile>.generate(5, (int index) {
+                          final String item = 'item $index';
+                          return ListTile (
+                            title: Text(item),
+                            onTap: () {
+                              setState(() {
+                                controller.closeView(item);
+                              });
+                            },
+                          );
+                        });
+                      },
+                    ),
+                    TextButton(
+                      onPressed: () {}, 
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 141, 30, 192),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)
+                      ),
+                      child: const Text("Search", 
+                      style: TextStyle(fontSize: 20.0, color: Color.fromARGB(255, 255, 255, 255)))
+                    )
+                  ],
                 ),
               ],
             ),
