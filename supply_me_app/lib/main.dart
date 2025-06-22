@@ -40,6 +40,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
+  int index = 0;
+  final SearchController _searchController = SearchController();
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -64,39 +68,37 @@ class _MyAppState extends State<MyApp> {
             padding: EdgeInsets.all(0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              spacing: 10,  
+              spacing: 15,  
               children: [
                 SizedBox(
                   width: double.infinity,
-                  height: 100,
+                  height: 150,
                   child: Image.asset(
                     'assets/images/logo.png',
                     fit: BoxFit.contain,
                   ),
                 ),
                 Column(
-                  spacing: 90,
+                  spacing: 110,
                   children: [
                     Text(
                       "What do you want to look for?",
-                      style: TextStyle(fontSize: 30)
+                      style: TextStyle(fontSize: 45)
                     ),
                     SearchAnchor(
+                      searchController: _searchController, 
                       builder: (BuildContext context, SearchController controller) {
                         return SearchBar(
                           controller: controller,
                           hintText: 'Search for a company',
-                          onTap: () {
-                            controller.openView();
-                          },
-                          onChanged: (_) {
-                            controller.openView();
-                          },
+                          onSubmitted: (value) => _handleSearch(context, value),
+                          onTap: controller.openView,
+                          onChanged: (_) => controller.openView(),
                           leading: const Icon(Icons.search),
                         );
                       },
                       suggestionsBuilder: (BuildContext context, SearchController controller) {
-                        return List<ListTile>.generate(5, (int index) {
+                        return List<ListTile>.generate(8, (int index) {
                           final String item = 'item $index';
                           return ListTile (
                             title: Text(item),
@@ -109,20 +111,23 @@ class _MyAppState extends State<MyApp> {
                         });
                       },
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SearchPage())
+                    Builder(
+                      builder: (context) {
+                        return TextButton(
+                          onPressed: () {
+                            _handleSearch(context, _searchController.text);
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 141, 30, 192),
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          ),
+                          child: const Text(
+                            "Search",
+                            style: TextStyle(fontSize: 20.0, color: Colors.white),
+                          ),
                         );
-                      }, 
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 141, 30, 192),
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)
-                      ),
-                      child: const Text("Search", 
-                      style: TextStyle(fontSize: 20.0, color: Color.fromARGB(255, 255, 255, 255)))
-                    )
+                      },
+                    ),
                   ],
                 ),
               ],
@@ -134,28 +139,31 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
 
-  @override
-  SearchPageState createState() => SearchPageState();
+
+void _handleSearch(BuildContext context, String query) {
+  final trimmed = query.trim();
+  if (trimmed.isNotEmpty) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchPage(query: trimmed),
+      ),
+    );
+  }
 }
 
-class SearchPageState extends State<SearchPage> {
-  @override 
+class SearchPage extends StatelessWidget {
+  final String query;
 
+  const SearchPage({super.key, required this.query});
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Flutter Second Page"),
-      ),
-     body: Center(
-        child: ElevatedButton(
-            child: Text("Go back"),
-            onPressed: () {
-              Navigator.pop(context);
-            }
-        ),
+      appBar: AppBar(title: Text('Results for "$query"')),
+      body: Center(
+        child: Text('You searched for: $query'),
       ),
     );
   }
