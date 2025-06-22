@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: darkTheme,
       home: Scaffold(
-        appBar: AppBar(
+        /*appBar: AppBar(
           automaticallyImplyLeading: false, 
           title: Center(
             child: Row(
@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
               ],
             ),
           ),
-        ),
+        ),*/
        
         body: Center(
           child: Container(
@@ -110,7 +110,12 @@ class _MyAppState extends State<MyApp> {
                       },
                     ),
                     TextButton(
-                      onPressed: () {}, 
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SearchPage())
+                        );
+                      }, 
                       style: TextButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 141, 30, 192),
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)
@@ -123,6 +128,33 @@ class _MyAppState extends State<MyApp> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
+  @override
+  SearchPageState createState() => SearchPageState();
+}
+
+class SearchPageState extends State<SearchPage> {
+  @override 
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Flutter Second Page"),
+      ),
+     body: Center(
+        child: ElevatedButton(
+            child: Text("Go back"),
+            onPressed: () {
+              Navigator.pop(context);
+            }
         ),
       ),
     );
