@@ -67,8 +67,8 @@ class _MyAppState extends State<MyApp> {
           child: Container(
             padding: EdgeInsets.all(0),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              spacing: 15,  
+              spacing: 15,
+              mainAxisSize: MainAxisSize.min,  
               children: [
                 SizedBox(
                   width: double.infinity,
@@ -153,18 +153,111 @@ void _handleSearch(BuildContext context, String query) {
   }
 }
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   final String query;
 
   const SearchPage({super.key, required this.query});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Results for "$query"')),
-      body: Center(
-        child: Text('You searched for: $query'),
-      ),
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Alignment> _begin = AlwaysStoppedAnimation(Alignment.topLeft);
+  late Animation<Alignment> _end = AlwaysStoppedAnimation(Alignment.bottomRight);
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 4),
+      vsync: this,
+    );
+
+    _begin = TweenSequence<Alignment>([
+      TweenSequenceItem(tween: Tween(begin: Alignment.topLeft, end: Alignment.bottomLeft), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: Alignment.bottomLeft, end: Alignment.bottomRight), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: Alignment.bottomRight, end: Alignment.topRight), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: Alignment.topRight, end: Alignment.topLeft), weight: 1),
+    ]).animate(_controller);
+
+    _end = TweenSequence<Alignment>([
+      TweenSequenceItem(tween: Tween(begin: Alignment.bottomRight, end: Alignment.bottomLeft), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: Alignment.bottomLeft, end: Alignment.topLeft), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: Alignment.topLeft, end: Alignment.topRight), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: Alignment.topRight, end: Alignment.bottomRight), weight: 1),
+    ]).animate(_controller);
+
+    _controller.repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Widget _buildAnimatedBorderBox({required Widget child}) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Container(
+          padding: const EdgeInsets.all(4), // border thickness
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: LinearGradient(
+              begin: _begin.value,
+              end: _end.value,
+              colors: const [Color.fromARGB(255, 85, 2, 123), Color.fromARGB(255, 1, 146, 100)],
+            ),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black, // solid color inside
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: child,
+          ),
+        );
+      },
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Results for "${widget.query}"')),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.75, // 75% of screen height
+            child: _buildAnimatedBorderBox(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'You searched for: ${widget.query}',
+                      style: const TextStyle(fontSize: 24, color: Colors.white),
+                    ),
+                    const SizedBox(height: 30),
+                    ...List.generate(3, (i) => Container(
+                          color: Colors.white,
+                          margin: const EdgeInsets.only(top: 20),
+                          height: 100,
+                          width: double.infinity,
+                        )),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }   
 }
